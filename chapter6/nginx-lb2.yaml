@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-lb2
+  annotations:
+    metallb.universe.tf/address-pool: subnet-201
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    run: nginx-web
+  type: LoadBalancer

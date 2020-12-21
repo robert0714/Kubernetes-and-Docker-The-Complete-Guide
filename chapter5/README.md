@@ -88,4 +88,83 @@ $ kind delete cluster  --name cluster01
 ## Creating a custom KinD cluster 
 ```bash
 $ kind create cluster  --name cluster02  --config cluster02-kind.yaml 
+
 ```
+
+## How to debug when Kubernetes nodes are in 'Not Ready' state
+
+Steps to debug:-
+
+In case you face any issue in kubernetes, first step is to check if kubernetes self applications are running fine or not.
+
+Command to check:- 
+
+```bash
+kubectl get pods -n kube-system
+```
+
+If you see any pod is crashing, check it's logs
+
+if getting NotReady state error, verify network pod logs.
+
+if not able to resolve with above, follow below steps:-
+
+1. Check which node is not in ready state.
+```bash
+kubectl get nodes 
+```
+2. nodename which is not in readystate
+```bash
+kubectl describe node nodename 
+```
+or
+```bash
+$ kubectl describe nodes
+Conditions:
+  Type              Status
+  ----              ------
+  OutOfDisk         False
+  MemoryPressure    False
+  DiskPressure      False
+  Ready             True
+Capacity:
+ cpu:       2
+ memory:    2052588Ki
+ pods:      110
+Allocatable:
+ cpu:       2
+ memory:    1950188Ki
+ pods:      110
+```
+
+3. ssh to that node
+
+4. Make sure kubelet is running
+```bash
+systemctl status kubelet
+```
+5.  Make sure docker service is running
+
+```bash
+systemctl status docker 
+```
+
+6. To Check logs in depth
+```bash
+journalctl -u kubelet 
+```
+
+Most probably you will get to know about error here, After fixing it reset kubelet with below commands:-
+```bash
+systemctl daemon-reload
+systemctl restart kubelet
+```
+In case you still didn't get the root cause, check below things:-
+
+Make sure your node has enough space and memory. Check for /var directory space especially. command to check: -df -kh, free -m
+
+Verify cpu utilization with top command. and make sure any process is not taking an unexpected memory.
+
+
+
+
