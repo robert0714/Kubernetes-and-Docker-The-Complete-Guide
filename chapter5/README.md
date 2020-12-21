@@ -79,3 +79,13 @@ echo -e "\n \n******************************************************************
 echo -e "Cluster Creation Complete.  Please see the summary beloq for key information that will be used in later chapters"
 echo -e "*******************************************************************************************************************"
 ```
+
+## Destroying a custom KinD cluster 
+```bash
+$ kind delete cluster  --name cluster01
+```
+
+## Creating a custom KinD cluster 
+```bash
+$ kind create cluster  --name cluster02  --config cluster02-kind.yaml 
+```
