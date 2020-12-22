@@ -189,7 +189,7 @@ Most enterprises today use Active Directory from Microsoft™ to store informati
 
 The next decision with ADFS is whether to use SAML2 or OpenID Connect. At the time of writing, SAML2 is much easier to implement and most enterprise environments with ADFS prefer to use SAML2. Another benefit of SAML2 is that it doesn't require a connection between our cluster and the ADFS servers; all of the important information is transferred through the user's browser. This cuts down on potential firewall rules that need to be implemented in order to get our cluster up and running.
 
-## Important Note
+#### Important Note
 
 Don't worry – you don't need ADFS ready to go to run this exercise. We have a handy SAML testing identity provider we'll use. You won't need to install anything to use SAML2 with your KinD cluster.
 
@@ -216,7 +216,7 @@ For our implementation, we're going to use two hostnames:
 
 * k8s.apps.X-X-X-X.nip.io: Access to the OpenUnison portal, where we'll initiate our login and get our tokens
 * k8sdb.apps.X-X-X-X.nip.io: Access to the Kubernetes dashboard
-    * Important Note
+    #### Important Note
         * As a quick refresher, nip.io is a public DNS service that will return an IP address from the one embedded in your hostname. This is really useful in a lab environment where setting up DNS can be painful. In our examples, X-X-X-X is the IP of your Docker host.
 
 When a user attempts to access https://k8s.apps.X-X-X-X.nip.io/, they'll be redirected to ADFS, which will collect their username and password (and maybe even a multi-factor authentication token). ADFS will generate an assertion that will be digitally signed and contain our user's unique ID, as well as their group assignments. This assertion is similar to id_token, which we examined earlier, but instead of being JSON, it's XML. The assertion is sent to the user's browser in a special web page that contains a form that will automatically submit the assertion back to OpenUnison. At that point, OpenUnison will create user objects in the OpenUnison namespace to store the user's information and create OIDC sessions.
@@ -232,7 +232,7 @@ We have included two installation scripts to automate the deployment steps. Thes
 
 This section will explain all of the manual steps that the script automates.
 
-## Important Note
+#### Important Note
 
 If you install OIDC using the scripts, you must follow this process for a successful deployment:
 
@@ -285,7 +285,7 @@ Helm repo add tremolo https://nexus.tremolo.io/repository/Helm/
 https://nexus.tremolo.io/repository/Helm/"tremolo" has been added to your repositories
 ```
 
-## Important Note
+#### Important Note
 
 Helm is a package manager for Kubernetes. Helm provides a tool that will deploy a "Chart" to your cluster and help you manage the state of the deployment. We're using Helm v3, which does not require you to deploy any components, such as Tiller, to your cluster to work.
 
