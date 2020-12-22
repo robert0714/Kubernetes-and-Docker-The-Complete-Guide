@@ -244,11 +244,11 @@ Step3: Run the ./install-oidc-step2.sh script to complete the OIDC deployment.
 
 Deploying OIDC to a Kubernetes cluster using OpenUnison is a five-step process:
 
-*  Deploy the dashboard.
-*  Deploy the OpenUnison operator.
-*  Create a secret.
-*  Create a values.yaml file.
-*  Deploy the chart.
+1  Deploy the dashboard.
+2  Deploy the OpenUnison operator.
+3  Create a secret.
+4  Create a values.yaml file.
+5  Deploy the chart.
    
   
   Let's perform these steps one by one.
@@ -258,7 +258,7 @@ The dashboard is a popular feature for many users. It provides a quick view into
 
 1. First, we'll deploy the dashboard from https://github.com/kubernetes/dashboard:
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.1.0/aio/deploy/recommended.yaml
 
 namespace/kubernetes-dashboard created
 serviceaccount/kubernetes-dashboard created
@@ -274,6 +274,7 @@ clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
 deployment.apps/kubernetes-dashboard created
 service/dashboard-metrics-scraper created
 deployment.apps/dashboard-metrics-scraper created
+
 ```
 
 2. Next, we need to add the repository that contains OpenUnison to our Helm list. To add the Tremolo chart repository, use the Helm repo add command:
