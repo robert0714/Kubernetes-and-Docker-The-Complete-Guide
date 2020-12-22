@@ -713,15 +713,41 @@ TEST SUITE: None
 Just like with our OpenID Connect integration with Kubernetes, finish the integration with the testing identity provider. First, get the metadata:
 
 ```bash
-$ curl --insecure https://k8sou.apps.192-168-2-131.nip.io/auth/forms/saml2_rp_metadata.jsp
+ curl --insecure https://k8sou.apps.10-100-198-200.nip.io/auth/forms/saml2_rp_metadata.jsp
+ 
+<?xml version="1.0" encoding="UTF-8"?><md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" ID="f275c76687cc91bdf29e327667daec0095ec233ff" entityID="https://k8sou.apps.10-100-198-200.nip.io/auth/SAML2Auth">
+   <md:SPSSODescriptor WantAssertionsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+      <md:KeyDescriptor use="signing">
+         <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+            <ds:X509Data>
+               <ds:X509Certificate>MIID1jCCAr6gAwIBAgIGAXaKdUxuMA0GCSqGSIb3DQEBCwUAMIGHMRwwGgYDVQQDDBN1bmlzb24t&#13;
+c2FtbDItcnAtc2lnMRMwEQYDVQQLDApLdWJlcm5ldGVzMQ4wDAYDVQQKDAVNeU9yZzETMBEGA1UE&#13;
+BwwKTXkgQ2x1c3RlcjEZMBcGA1UECAwQU3RhdGUgb2YgQ2x1c3RlcjESMBAGA1UEBhMJTXlDb3Vu&#13;
+dHJ5MB4XDTIwMTIyMjEyMzgzMVoXDTIxMTIyMjEyMzgzMVowgYcxHDAaBgNVBAMME3VuaXNvbi1z&#13;
+YW1sMi1ycC1zaWcxEzARBgNVBAsMCkt1YmVybmV0ZXMxDjAMBgNVBAoMBU15T3JnMRMwEQYDVQQH&#13;
+DApNeSBDbHVzdGVyMRkwFwYDVQQIDBBTdGF0ZSBvZiBDbHVzdGVyMRIwEAYDVQQGEwlNeUNvdW50&#13;
+cnkwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCWlAE2jHtOUyp1MEX9EqlSHP7uEovb&#13;
+9Cbup/6D/gOz8ijtIhRNjqQZQoLozIzliCwWfIMdkblhh30jhXzDpvDGG8dZ3fdzhFHc+skK9T9G&#13;
+lqHjza2IBNg34PmA5du7tc1PCQy/U0kRzUp5FEkSSJFhR/HpZOYeWYfcCePjdJ0cmkEaV4NkDKME&#13;
+kaeGfhTbJSiHAiG63k8HUGAowbIJmANePBFJQ3URyrkjXqq/XWsO7IpMNMW31H3/VG43uBp2URfk&#13;
+QIn6tmxL/POrV/ckjTeE9VRVJhsaCHgLA4jC/hWDm5ZqI4udjdajHzgfid/A/F6GSlyYrlRCc7s6&#13;
+pRwyKKaFAgMBAAGjRjBEMA4GA1UdDwEB/wQEAwICBDASBgNVHSUBAf8ECDAGBgRVHSUAMB4GA1Ud&#13;
+EQQXMBWCE3VuaXNvbi1zYW1sMi1ycC1zaWcwDQYJKoZIhvcNAQELBQADggEBAIfNCSxRDOQVvM7P&#13;
+/cm3k+L5xfs8vyf7kQfCoMcbY6qGJiSJQUcck2CpUexVIvnHum6+FLnB6AJ9lbH93YMcU9g4jyvK&#13;
+1p39Fei+T/QxO7yOWKiVc3TPSy5K4rMibqpk1pTZaWd5ulkOFuZHI9cdJgbLwUwJpja+3tyVcwqa&#13;
+cguhFziOEI5MQVn31g9I/4A/R2j5bbeNsTInGJbyVK1SLVTcwa5pfnPEYv1jRjJAdy31zQXWP6yh&#13;
+ncYWcZM8zFtiWD/iuJP8wyYWn3n05AouZb6ehRBY9O4LfL9x3QPnqJOmzBxkhv5yg2UzSSmV5wln&#13;
+YA/PDYQErBlEsOP3G0sTWtw=</ds:X509Certificate>
+            </ds:X509Data>
+         </ds:KeyInfo>
+      </md:KeyDescriptor>
+      <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://k8sou.apps.10-100-198-200.nip.io/auth/SAML2Auth"/>
+      <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://k8sou.apps.10-100-198-200.nip.io/auth/SAML2Auth"/>
+      <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://k8sou.apps.10-100-198-200.nip.io/auth/SAML2Auth" index="0" isDefault="true"/>
+      <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://k8sou.apps.10-100-198-200.nip.io/auth/SAML2Auth" index="1"/>
+   </md:SPSSODescriptor>
+</md:EntityDescriptor>
 
-<?xml version="1.0" encoding="UTF-8"?><md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" ID="f4a4bacd63709fe486c30ec536c0f552a506d0023" entityID="https://k8sou.apps.192-168-2-131.nip.io/auth/SAML2Auth">
-
-   <md:SPSSODescriptor WantAssertionsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
-
-.
-.
-.
 ```
 
 5. Next, log into https://portal.apps.tremolo.io/, choose the testing identity provider, and copy and paste the resulting metadata into the testing identity provider where it says Meta Data.
