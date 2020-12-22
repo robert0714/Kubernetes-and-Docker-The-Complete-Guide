@@ -31,23 +31,86 @@ kubectl get secret $(kubectl get sa mysa -n default -o json | jq -r '.secrets[0]
 ```
 To show an example of this, let's call the API endpoint directly, without providing any credentials:
 ```bash
-curl -v --insecure https://0.0.0.0:32768/api
+curl -v --insecure https://0.0.0.0:6443/api
 ```
 You will receive the following:
-```json
+```bash
+*   Trying 0.0.0.0...
+* TCP_NODELAY set
+* Connected to 0.0.0.0 (127.0.0.1) port 6443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: /etc/ssl/certs/ca-certificates.crt
+  CApath: /etc/ssl/certs
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+* TLSv1.3 (IN), TLS Unknown, Certificate Status (22):
+* TLSv1.3 (IN), TLS handshake, Unknown (8):
+* TLSv1.3 (IN), TLS Unknown, Certificate Status (22):
+* TLSv1.3 (IN), TLS handshake, Request CERT (13):
+* TLSv1.3 (IN), TLS Unknown, Certificate Status (22):
+* TLSv1.3 (IN), TLS handshake, Certificate (11):
+* TLSv1.3 (IN), TLS Unknown, Certificate Status (22):
+* TLSv1.3 (IN), TLS handshake, CERT verify (15):
+* TLSv1.3 (IN), TLS Unknown, Certificate Status (22):
+* TLSv1.3 (IN), TLS handshake, Finished (20):
+* TLSv1.3 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.3 (OUT), TLS Unknown, Certificate Status (22):
+* TLSv1.3 (OUT), TLS handshake, Certificate (11):
+* TLSv1.3 (OUT), TLS Unknown, Certificate Status (22):
+* TLSv1.3 (OUT), TLS handshake, Finished (20):
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+* ALPN, server accepted to use h2
+* Server certificate:
+*  subject: CN=kube-apiserver
+*  start date: Dec 21 04:07:58 2020 GMT
+*  expire date: Dec 21 04:07:59 2021 GMT
+*  issuer: CN=kubernetes
+*  SSL certificate verify result: unable to get local issuer certificate (20), continuing anyway.
+* Using HTTP2, server supports multi-use
+* Connection state changed (HTTP/2 confirmed)
+* Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+* TLSv1.3 (OUT), TLS Unknown, Unknown (23):
+* TLSv1.3 (OUT), TLS Unknown, Unknown (23):
+* TLSv1.3 (OUT), TLS Unknown, Unknown (23):
+* Using Stream ID: 1 (easy handle 0x557c6613a4f0)
+* TLSv1.3 (OUT), TLS Unknown, Unknown (23):
+> GET /api HTTP/2
+> Host: 0.0.0.0:6443
+> User-Agent: curl/7.58.0
+> Accept: */*
+> 
+* TLSv1.3 (IN), TLS Unknown, Certificate Status (22):
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* TLSv1.3 (IN), TLS Unknown, Unknown (23):
+* Connection state changed (MAX_CONCURRENT_STREAMS updated)!
+* TLSv1.3 (OUT), TLS Unknown, Unknown (23):
+* TLSv1.3 (IN), TLS Unknown, Unknown (23):
+* TLSv1.3 (IN), TLS Unknown, Unknown (23):
+* TLSv1.3 (IN), TLS Unknown, Unknown (23):
+< HTTP/2 403 
+< content-type: application/json
+< x-content-type-options: nosniff
+< content-length: 236
+< date: Tue, 22 Dec 2020 02:18:33 GMT
+< 
+* TLSv1.3 (IN), TLS Unknown, Unknown (23):
 {
-  "kind": "Status",
-  "apiVersion": "v1",
-  "metadata": {
-  },
-  "status": "Failure",
-  "message": "forbidden: User \"system:anonymous\" cannot get path \"/api\"",
-  "reason": "Forbidden",
-  "details": {
-  },
-  "code": 403
-
-// Connection #0 to host 0.0.0.0 left intact
+  "kind": "Status",
+  "apiVersion": "v1",
+  "metadata": {
+    
+  },
+  "status": "Failure",
+  "message": "forbidden: User \"system:anonymous\" cannot get path \"/api\"",
+  "reason": "Forbidden",
+  "details": {
+    
+  },
+  "code": 403
+* Connection #0 to host 0.0.0.0 left intact
+}
 ```
 By default, most Kubernetes distributions do not allow anonymous access to the API server, so we receive a 403 error because we didn't specify a user.
 
@@ -56,18 +119,18 @@ Now, let's add our service account to an API request:
 ```bash
 export KUBE_AZ=$(kubectl get secret $(kubectl get sa mysa -n default -o json | jq -r '.secrets[0].name') -o json | jq -r '.data.token'  | base64 -d)
 
-curl  -H "Authorization: Bearer $KUBE_AZ" --insecure https://0.0.0.0:32768/api
+curl  -H "Authorization: Bearer $KUBE_AZ" --insecure https://0.0.0.0:6443/api
 {
-  "kind": "APIVersions",
-  "versions": [
-    "v1"
-  ],
-  "serverAddressByClientCIDRs": [
-    {
-      "clientCIDR": "0.0.0.0/0",
-      "serverAddress": "172.17.0.3:6443"
-    }
-  ]
+  "kind": "APIVersions",
+  "versions": [
+    "v1"
+  ],
+  "serverAddressByClientCIDRs": [
+    {
+      "clientCIDR": "0.0.0.0/0",
+      "serverAddress": "172.18.0.2:6443"
+    }
+  ]
 }
 ```
 Success! This was an easy process, so you may be wondering, ***"Why do I need worry about all the complicated OIDC mess?"*** This solution's simplicity brings multiple security issues:
