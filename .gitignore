@@ -3,3 +3,4 @@
 *.tar.gz
 .docker_file/**/*
 !.docker_file/readme
+chapter5/go
