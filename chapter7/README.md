@@ -135,11 +135,11 @@ curl  -H "Authorization: Bearer $KUBE_AZ" --insecure https://0.0.0.0:6443/api
 ```
 Success! This was an easy process, so you may be wondering, ***"Why do I need worry about all the complicated OIDC mess?"*** This solution's simplicity brings multiple security issues:
 
-* *Secure transmission of the token*: Service accounts are self-contained and need nothing to unlock them or verify ownership, so if a token is taken in transit, you have no way of stopping its use. You could set up a system where a user logs in to download a file with the token in it, but you now have a much less secure version of OIDC.
+* ***Secure transmission of the token***: Service accounts are self-contained and need nothing to unlock them or verify ownership, so if a token is taken in transit, you have no way of stopping its use. You could set up a system where a user logs in to download a file with the token in it, but you now have a much less secure version of OIDC.
 
-* *No expiration*: When you decode a service account token, there is nothing that tell you when the token expires. That's because the token never expires. You can revoke a token by deleting the service account and recreating it, but that means you need a system in place to do that. Again, you've built a less capable version of OIDC.
+* ***No expiration***: When you decode a service account token, there is nothing that tell you when the token expires. That's because the token never expires. You can revoke a token by deleting the service account and recreating it, but that means you need a system in place to do that. Again, you've built a less capable version of OIDC.
 
-* *Auditing*: The service account can easily be handed out by the owner once the key has been retrieved. If there are multiple users using a single key, it becomes very difficult to audit use of the account.
+* ***Auditing***: The service account can easily be handed out by the owner once the key has been retrieved. If there are multiple users using a single key, it becomes very difficult to audit use of the account.
   
 In addition to these issues, you can't put a service account into arbitrary groups. This means that RBAC bindings have to either be direct to the service account or use one of the pre-built groups that service accounts are a member of. We'll explore why this is an issue when we talk about authorization, so just keep it in mind for now.
 
