@@ -25,6 +25,6 @@ trusted_certs: []
 monitoring:
   prometheus_service_account: system:serviceaccount:monitoring:prometheus-k8s
 saml:
-  idp_url: https://portal.apps.tremolo.io/idp-test/metadata/dfbe4040-cd32-470e-a9b6-809c840
+  idp_url: https://portal.apps.tremolo.io/idp-test/metadata/33cf02c1-2515-4c52-94c8-ab7f902de6f4
   metadata_xml_b64: ""
 

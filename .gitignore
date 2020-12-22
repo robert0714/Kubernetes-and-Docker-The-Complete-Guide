@@ -1,3 +1,5 @@
 .vagrant/
 *.log
 *.tar.gz
+.docker_file/**/*
+!.docker_file/readme

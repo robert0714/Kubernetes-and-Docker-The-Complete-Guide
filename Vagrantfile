@@ -4,8 +4,10 @@
 Vagrant.configure(2) do |config|
   if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
     config.vm.synced_folder ".", "/vagrant", mount_options: ["dmode=700,fmode=600"]
+    config.vm.synced_folder ".docker_file", "/var/lib/docker", mount_options: ["dmode=700,fmode=600"]
   else
     config.vm.synced_folder ".", "/vagrant"
+    config.vm.synced_folder ".docker_file", "/var/lib/docker"
   end
   config.vm.define "cd" do |d| 
     d.vm.box = "ubuntu/bionic64" 
