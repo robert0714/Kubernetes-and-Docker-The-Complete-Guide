@@ -737,7 +737,7 @@ These changes enable OpenUnison's impersonation features and generate an additio
 
 3. Run the Helm chart with the new values.yaml file:
 ```bash
-helm install orchestra tremolo/openunison-k8s-login-saml2 –namespace openunison -f ./values.yaml
+helm install orchestra tremolo/openunison-k8s-login-saml2  --namespace openunison   -f ./values_2.yaml
 
 NAME: orchestra
 LAST DEPLOYED: Thu Apr 23 20:55:16 2020
