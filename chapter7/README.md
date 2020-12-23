@@ -489,33 +489,34 @@ Since we are using KinD, we can add the required options using a few **kubectl**
 To provide the OIDC certificate to the API server, we need to retrieve the certificate and copy it over to the KinD master server. We can do this using two commands on the Docker host:
 
 1. The first command extracts OpenUnison's TLS certificate from its secret. This is the same secret referenced by OpenUnison's Ingress object. We use the jq utility to extract the data from the secret and then base64 decode it:
+```bash
 kubectl get secret ou-tls-certificate -n openunison -o json | jq -r '.data["tls.crt"]' | base64 -d > ou-ca.pem
+```
 
 2. The second command will copy the certificate to the master server into the /etc/Kubernetes/pki directory:
+```bash
 docker cp ou-ca.pem cluster01-control-plane:/etc/kubernetes/pki/ou-ca.pem
-
+```
 3. As we mentioned earlier, to integrate the API server with OIDC, we need to have the OIDC values for the API options. To list the options we will use, describe the api-server-config ConfigMap in the openunison namespace:
   
 ```bash
-kubectl describe configmap api-server-config -n openunison
+$ kubectl describe configmap api-server-config -n openunison
+Name:         api-server-config
+Namespace:    openunison
+Labels:       app.kubernetes.io/managed-by=Helm
+Annotations:  meta.helm.sh/release-name: orchestra
+              meta.helm.sh/release-namespace: openunison
 
-Name:         api-server-config
-Namespace:    openunison
-Labels:       <none>
-Annotations:  <none>
 Data
-
 ====
-
 oidc-api-server-flags:
-
 ----
-
 --oidc-issuer-url=https://k8sou.apps.192-168-2-131.nip.io/auth/idp/k8sIdp
 --oidc-client-id=kubernetes
 --oidc-username-claim=sub
 --oidc-groups-claim=groups
 --oidc-ca-file=/etc/kubernetes/pki/ou-ca.pem
+Events:  <none>
 ```
 
 4. Next, edit the API server configuration. OpenID Connect is configured by changing flags on the API server. This is why managed Kubernetes generally doesn't offer OpenID Connect as an option, but we'll cover that later in this chapter. Every distribution handles these changes differently, so check with your vendor's documentation. For KinD, shell into the control plane and update the manifest file:
