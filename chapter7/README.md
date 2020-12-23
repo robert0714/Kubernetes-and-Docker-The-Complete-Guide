@@ -529,6 +529,11 @@ apt-get install vim
 
 vi /etc/kubernetes/manifests/kube-apiserver.yaml
 ```
+or 
+
+```bash
+kubectl  -n kube-system   edit pod   kube-apiserver-cluster01-control-plane
+```
 
 5. Look for two options under *command* called **--oidc-client** and **–oidc-issuer-url**. Replace those two with the output from the preceding command that produced the API server flags. Make sure to add spacing and a dash (-) in front. It should look something like this when you're done:
 ```bash
