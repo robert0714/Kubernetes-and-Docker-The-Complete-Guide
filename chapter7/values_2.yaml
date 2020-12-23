@@ -1,7 +1,7 @@
 network:
   openunison_host: "k8sou.apps.10-100-198-200.nip.io"
   dashboard_host: "k8sdb.apps.10-100-198-200.nip.io"
-  api_server_host: ""
+  api_server_host: "k8sapi.apps.10-100-198-200.nip.io"
   session_inactivity_timeout_seconds: 900
   k8s_url: https://0.0.0.0:6443
 cert_template:
@@ -13,7 +13,7 @@ cert_template:
 image: "docker.io/tremolosecurity/openunison-k8s-login-saml2:latest"
 myvd_config_path: "WEB-INF/myvd.conf"
 k8s_cluster_name: kubernetes
-enable_impersonation: false
+enable_impersonation: true
 dashboard:
   namespace: "kubernetes-dashboard"
   cert_name: "kubernetes-dashboard-certs"
