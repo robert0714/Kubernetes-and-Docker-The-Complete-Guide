@@ -597,6 +597,10 @@ Using the Dashboard has its use cases, but you will likely interact with the API
 
 1.  You can retrieve you token from the OpenUnison dashboard. Navigate to the OpenUnison home page and click on the key that says Kubernetes Tokens. You'll see a screen that looks as follows:
 
+https://k8sou.apps.10-100-198-200.nip.io/auth/idp/k8sIdp   
+https://k8sou.apps.10-100-198-200.nip.io/k8stoken/index.html   
+https://k8sou.apps.192-168-2-131.nip.io/auth/idp/k8sIdp
+https://k8sou.apps.192-168-2-131.nip.io/k8stoken/index.html   
 Figure 7.10 – OpenUnison kubectl configuration tool
 
 OpenUnison provides a command line that you can copy and paste into your host session that adds all the required information to your config.
