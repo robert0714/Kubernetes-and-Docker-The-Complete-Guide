@@ -465,17 +465,17 @@ YA/PDYQErBlEsOP3G0sTWtw=</ds:X509Certificate>
 ```
 13. Copy the output, paste it into the testing identity provider where it says Meta Data, and click Update Relying Party:
 
-Figure 7.5 – Testing the identity provider with the relying party metadata
+Figure 7.5 – Testing the identity provider with the relying party metadata  
 14. Finally, we need to add some attributes to our test user. Add the attributes shown in the following screenshot:
 
 Figure 7.6 – Identity provider test user configuration
 
-15. Next, click Update Test User Data to save your attributes. With that, you're ready to log in.
-16. You can log into the OIDC provider using any machine on your network by using the assigned nip.io address. Since we will test access using the dashboard, you can use any machine with a browser. Navigate your browser to network.openunison_host in your values.yaml file. Enter your testing identity provider credentials, if needed, and then click Finish Login at the bottom of the screen. You should now be logged into OpenUnison:
+15. Next, click ***Update Test User Data*** to save your attributes. With that, you're ready to log in.
+16. You can log into the OIDC provider using any machine on your network by using the assigned nip.io address. Since we will test access using the dashboard, you can use any machine with a browser. Navigate your browser to **network.openunison_host** in your **values.yaml** file. Enter your testing identity provider credentials, if needed, and then click ***Finish Login*** at the bottom of the screen. You should now be logged into OpenUnison:
 
-Figure 7.7 – OpenUnison home screen
+Figure 7.7 – OpenUnison home screen  
 
-17. Let's test the OIDC provider by clicking on the Kubernetes Dashboard link. Don't panic when you look at the initial dashboard screen – you'll see something like the following:
+17. Let's test the OIDC provider by clicking on the Kubernetes Dashboard link. Don't panic when you look at the initial dashboard screen – you'll see something like the following:  
 
 Figure 7.8 – Kubernetes Dashboard before SSO integration has been completed with the API server
 
@@ -484,7 +484,7 @@ That looks like a lot of errors! We're in the dashboard, but nothing seems to be
 ## Configuring the Kubernetes API to use OIDC
 At this point, you have deployed OpenUnison as an OIDC provider and it's working, but your Kubernetes cluster has not been configured to use it as a provider yet. To configure the API server to use an OIDC provider, you need to add the OIDC options to the API server and provide the OIDC certificate so that the API will trust the OIDC provider.
 
-Since we are using KinD, we can add the required options using a few kubectl and docker commands.
+Since we are using KinD, we can add the required options using a few **kubectl** and **docker** commands.
 
 To provide the OIDC certificate to the API server, we need to retrieve the certificate and copy it over to the KinD master server. We can do this using two commands on the Docker host:
 
@@ -518,7 +518,7 @@ oidc-api-server-flags:
 --oidc-ca-file=/etc/kubernetes/pki/ou-ca.pem
 ```
 
-Next, edit the API server configuration. OpenID Connect is configured by changing flags on the API server. This is why managed Kubernetes generally doesn't offer OpenID Connect as an option, but we'll cover that later in this chapter. Every distribution handles these changes differently, so check with your vendor's documentation. For KinD, shell into the control plane and update the manifest file:
+4. Next, edit the API server configuration. OpenID Connect is configured by changing flags on the API server. This is why managed Kubernetes generally doesn't offer OpenID Connect as an option, but we'll cover that later in this chapter. Every distribution handles these changes differently, so check with your vendor's documentation. For KinD, shell into the control plane and update the manifest file:
 ```bash
 docker exec -it cluster-auth-control-plane bash
 
@@ -529,7 +529,7 @@ apt-get install vim
 vi /etc/kubernetes/manifests/kube-apiserver.yaml
 ```
 
-5. Look for two options under command called --oidc-client and –oidc-issuer-url. Replace those two with the output from the preceding command that produced the API server flags. Make sure to add spacing and a dash (-) in front. It should look something like this when you're done:
+5. Look for two options under *command* called **--oidc-client** and **–oidc-issuer-url**. Replace those two with the output from the preceding command that produced the API server flags. Make sure to add spacing and a dash (-) in front. It should look something like this when you're done:
 ```bash
     - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
     - --oidc-issuer-url=https://k8sou.apps.192-168-2-131.nip.io/auth/idp/k8sIdp
@@ -539,7 +539,7 @@ vi /etc/kubernetes/manifests/kube-apiserver.yaml
     - --oidc-ca-file=/etc/kubernetes/pki/ou-ca.pem
     - --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt
 ```
-6. Exit vim and the Docker environment (ctl+d) and then take a look at the api-server pod:
+6. Exit vim and the Docker environment (*ctl+d*) and then take a look at the *api-server* pod:
 
 ```bash
 kubectl get pod kube-apiserver-cluster-auth-control-plane -n kube-system
@@ -548,21 +548,21 @@ NAME                                        READY   STA
 kube-apiserver-cluster-auth-control-plane   1/1     Running   0         73s  
 ```
 
-Notice that it's only 73s old. That's because KinD saw that there was a change in the manifest and restarted the API server.
+Notice that it's only *73s* old. That's because KinD saw that there was a change in the manifest and restarted the API server.
 
-### Important Note
+#### Important Note
 
 The API server pod is known as a "static pod". This pod can't be changed directly; its configuration has to be changed from the manifest on disk. This gives you a process that's managed by the API server as a container, but without giving you a situation where you need to edit pod manifests in EtcD directly if something goes wrong.
 
 ## Verifying OIDC integration
 Once OpenUnison and the API server have been integrated, we need to test that the connection is working:
 
-1. To test the integration, log back into OpenUnison and click on the Kubernetes Dashboard link again.
+1. To test the integration, log back into OpenUnison and click on the ***Kubernetes Dashboard*** link again.
 2. Click on the bell in the upper right and you'll see a different error:
 
 Figure 7.9 – SSO enabled but the user is not authorized to access any resources
 
-SSO between OpenUnison and you'll see that Kubernetes is working! However, the new error, service is forbidden: User https://..., is an authorization error, not an authentication error. The API server knows who we are, but isn't letting us access the APIs.
+SSO between OpenUnison and you'll see that Kubernetes is working! However, the new error, ***service is forbidden: User https://...***, is an authorization error, not an authentication error. The API server knows who we are, but isn't letting us access the APIs.
 
 3. We'll dive into the details of RBAC and authorizations in the next chapter, but for now, create this RBAC binding:
 ```
@@ -583,13 +583,13 @@ EOF
 
 clusterrolebinding.rbac.authorization.k8s.io/ou-cluster-admins created
 ```
-1.  Finally, go back to the dashboard and you'll see that you have full access to your cluster and all that of error messages are gone.
+4.  Finally, go back to the dashboard and you'll see that you have full access to your cluster and all that of error messages are gone.
+
 The API server and OpenUnison are now connected. Additionally, an RBAC policy has been created to enable our test user to manage the cluster as an administrator. Access was verified by logging into the Kubernetes dashboard, but most interactions will take place using the kubectl command. The next step is to verify we're able to access the cluster using kubectl.
 
 ## Using your tokens with kubectl
 
-Important Note
-
+#### Important Note
 This section assumes you have a machine on your network that has a browser and kubectl running.
 
 Using the Dashboard has its use cases, but you will likely interact with the API server using kubectl, rather than the dashboard, for the majority of your day. In this section, we will explain how to retrieve your JWT and how to add it to your Kubernetes config file:
@@ -657,17 +657,17 @@ Earlier in this chapter, we talked about how Kubernetes supports custom authenti
 *  ***User Experience*** : Your developers and admins may have to work across multiple clouds. Providing a consistent login experience makes it easier on them and requires learning fewer tools.
   
 * ***Security and Compliance***: The cloud implementation may not offer choices that line up with your enterprise's security requirements, such as short-lived tokens and idle timeouts.
-* 
+ 
 All that being said, there may be reasons to use the cloud vendor's implementation. You'll need to balance out the requirements, though. If you want to continue to use centralized authentication and authorization with hosted Kubernetes, you'll need to learn how to work with Impersonation.
 
-## What is Impersonation?
+#### What is Impersonation?
 Kubernetes Impersonation is a way of telling the API server who you are without knowing your credentials or forcing the API server to trust an OpenID Connect IdP. When you use kubectl, instead of the API server receiving your id_token directly, it will receive a service account or identifying certificate that will be authorized to impersonate users, as well as a set of headers that tell the API server who the proxy is acting on behalf of:
 
 The reverse proxy is responsible for determining how to map from id_token, which the user provides (or any other token, for that matter), to the Impersonate-User and Impersonate-Group HTTP headers. The dashboard should never be deployed with a privileged identity, which the ability to impersonate falls under. To allow Impersonation with the 2.0 dashboard, use a similar model, but instead of going to the API server, you go to the dashboard:
 
 The user interacts with the reverse proxy just like any web application. The reverse proxy uses its own service account and adds the impersonation headers. The dashboard passes this information through to the API server on all requests. The dashboard never has its own identity.
 
-## Security considerations
+### Security considerations
 The service account has a certain superpower: it can be used to impersonate anyone (depending on your RBAC definitions). If you're running your reverse proxy from inside the cluster, a service account is OK, especially if combined with the TokenRequest API to keep the token short-lived. Earlier in the chapter, we talked about ServiceAccount objects having no expiration. That's important here because if you're hosting your reverse proxy off cluster, then if it were compromised, someone could use that service account to access the API service as anyone. Make sure you're rotating that service account often. If you're running the proxy off cluster, it's probably best to use a shorter-lived certificate instead of a service account.
 
 When running the proxy on a cluster, you want to make sure it's locked down. It should run in its own namespace at a minimum. Not kube-system either. You want to minimize who has access. Using multi-factor authentication to get to that namespace is always a good idea, as are network policies that control what pods can reach out to the reverse proxy.
@@ -722,7 +722,7 @@ saml:
 We have made two changes here:
 
 *  Added a host for the API server proxy
-*  Enabled impersonation
+*  Enabled impersonation   
 These changes enable OpenUnison's impersonation features and generate an additional RBAC binding to enable impersonation on OpenUnison's service account.
 
 3. Run the Helm chart with the new values.yaml file:
@@ -737,7 +737,7 @@ REVISION: 1
 TEST SUITE: None
 ```
 
-Just like with our OpenID Connect integration with Kubernetes, finish the integration with the testing identity provider. First, get the metadata:
+4.  Just like with our OpenID Connect integration with Kubernetes, finish the integration with the testing identity provider. First, get the metadata:
 
 ```bash
  curl --insecure https://k8sou.apps.10-100-198-200.nip.io/auth/forms/saml2_rp_metadata.jsp
@@ -777,7 +777,7 @@ YA/PDYQErBlEsOP3G0sTWtw=</ds:X509Certificate>
 
 ```
 
-5. Next, log into https://portal.apps.tremolo.io/, choose the testing identity provider, and copy and paste the resulting metadata into the testing identity provider where it says Meta Data.
+5. Next, log into https://portal.apps.tremolo.io/, choose the testing identity provider, and copy and paste the resulting metadata into the testing identity provider where it says Meta Data.   
 6. Finally, to update the change, click Update Relying Party.
   
 
@@ -786,16 +786,16 @@ The new OpenUnison deployment is configured as a reverse proxy for the API serve
 ## Testing impersonation
 Now, let's test our impersonation setup. Follow these steps:
 
-1. In a browser, enter the URL for your OpenUnison deployment. This is the same URL you used for your initial OIDC deployment.
-2. Log into OpenUnison and then click on the dashboard. You should recall that the first time you opened the dashboard on the your initial OpenUnison deployment, you received a lot of errors until you created the new RBAC role, which granted access to the cluster.
-After you've enabled impersonation and opened the dashboard, you shouldn't see any error messages, even though you were prompted for new certificate warnings and didn't tell the API server to trust the new certificates you're using with the dashboard.
+1. In a browser, enter the URL for your OpenUnison deployment. This is the same URL you used for your initial OIDC deployment.  
+2. Log into OpenUnison and then click on the dashboard. You should recall that the first time you opened the dashboard on the your initial OpenUnison deployment, you received a lot of errors until you created the new RBAC role, which granted access to the cluster.   
+After you've enabled impersonation and opened the dashboard, you shouldn't see any error messages, even though you were prompted for new certificate warnings and didn't tell the API server to trust the new certificates you're using with the dashboard.  
 
-3. Click on the little circular icon in the upper right-hand corner to see who you're logged in as.
+3. Click on the little circular icon in the upper right-hand corner to see who you're logged in as.   
    
-4. Next, go back to the main OpenUnison dashboard and click on the Kubernetes Tokens badge.
+4. Next, go back to the main OpenUnison dashboard and click on the Kubernetes Tokens badge.   
 Notice that the --server flag being passed to kubectl no longer has an IP. Instead, it has the hostname from network.api_server_host in the values.yaml file. This is impersonation. Instead of interacting directly with the API server, you're now interacting with OpenUnison's reverse proxy.
 
-5. Finally, let's copy and paste our kubectl command into a shell:
+5. Finally, let's copy and paste our kubectl command into a shell:   
 ```bash
 export TMP_CERT=$(mktemp) && echo -e "-----BEGIN CERTIFI...
 Cluster "kubernetes" set.
