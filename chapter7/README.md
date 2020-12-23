@@ -571,15 +571,15 @@ kubectl create -f - <<EOF
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-   name: ou-cluster-admins
+  name: ou-cluster-admins
 subjects:
 - kind: Group
-   name: k8s-cluster-admins
-   apiGroup: rbac.authorization.k8s.io
+  name: k8s-cluster-admins
+  apiGroup: rbac.authorization.k8s.io
 roleRef:
-   kind: ClusterRole
-   name: cluster-admin
-   apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
 EOF
 
 clusterrolebinding.rbac.authorization.k8s.io/ou-cluster-admins created
